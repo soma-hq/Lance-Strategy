@@ -1,8 +1,11 @@
 ## Modules
 node_modules/
+.vscode
+.idea/
 
 ## Build
 dist
+build
 
 ## Logs
 logs
