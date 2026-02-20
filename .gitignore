@@ -27,3 +27,6 @@ Thumbs.db
 ## Misc
 *.bak
 *.tmp
+
+## Json
+*.json
