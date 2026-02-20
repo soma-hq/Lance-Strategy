@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Lance Strategy - Dashboard</title>
+		<!-- Core theme and UI styles -->
+		<link rel="stylesheet" href="src/styles/theme.css" />
+		<link rel="stylesheet" href="src/styles/sidebar.css" />
+		<link rel="stylesheet" href="src/styles/dashboard.css" />
+		<link rel="stylesheet" href="src/styles/projects.css" />
+		<link rel="stylesheet" href="src/styles/accounting.css" />
+		<link rel="stylesheet" href="src/styles/analytics.css" />
+		<link rel="stylesheet" href="src/styles/filters.css" />
+		<link rel="stylesheet" href="src/styles/filters-advanced.css" />
+		<link rel="stylesheet" href="src/styles/projects-cards.css" />
+		<link rel="stylesheet" href="src/styles/calendar-redesign.css" />
+		<link rel="stylesheet" href="src/styles/profile-panel.css" />
+		<link rel="stylesheet" href="src/styles/tasks.css" />
+		<link rel="stylesheet" href="src/styles/date-picker.css" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manro pe:wght@400;500;600;700;800&display=swap"
+			rel="stylesheet" />
+	</head>
+	<body>
+		<!-- Login Screen -->
+		<div id="loginScreen" class="login-container">
+			<div class="login-box">
+				<div class="login-header">
+					<h1>Lance Strategy</h1>
+					<p>Tableau de bord de gestion</p>
+				</div>
+				<form id="loginForm" class="login-form">
+					<div class="form-group">
+						<label for="username">Nom d'utilisateur</label>
+						<input
+							type="text"
+							id="username"
+							placeholder="Ton nom d'utilisateur..."
+							required />
+					</div>
+					<div class="form-group">
+						<label for="password">Mot de passe</label>
+						<div style="position: relative">
+							<input
+								type="password"
+								id="password"
+								placeholder="Ton mot de passe..."
+								style="padding-right: 2.5rem"
+								required />
+							<span
+								id="passwordToggle"
+								style="
+									position: absolute;
+									right: 0.75rem;
+									top: 50%;
+									transform: translateY(-50%);
+									cursor: pointer;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+									pointer-events: auto;
+								">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="18"
+									height="18"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="#999"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round">
+									<path
+										d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+									<circle cx="12" cy="12" r="3"></circle>
+								</svg>
+							</span>
+						</div>
+					</div>
+					<button type="submit" class="btn-primary">
+						Se connecter
+					</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Main Dashboard -->
+		<div
+			id="mainDashboard"
+			class="dashboard-container"
+			style="display: none">
+			<!-- Sidebar -->
+			<aside id="sidebar" class="sidebar"></aside>
+
+			<!-- Settings Modal -->
+			<div id="settingsModal" class="settings-modal">
+				<div class="settings-content">
+					<div class="settings-header">
+						<div
+							style="
+								display: flex;
+								justify-content: space-between;
+								align-items: start;
+							">
+							<div>
+								<h2 class="settings-title">Paramètres</h2>
+								<p
+									style="
+										color: var(--text-medium);
+										font-size: 0.9rem;
+										margin-top: 0.5rem;
+									">
+									Personnalise ton profil et tes préférences
+								</p>
+							</div>
+							<button
+								onclick="showDevNotice()"
+								style="
+									background: var(--bg-light);
+									border: 2px solid var(--border-light);
+									border-radius: 50%;
+									width: 2rem;
+									height: 2rem;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+									cursor: pointer;
+									transition: var(--transition);
+									color: var(--text-medium);
+								"
+								onmouseover="
+									this.style.borderColor = 'var(--primary)';
+									this.style.color = 'var(--primary)';
+								"
+								onmouseout="
+									this.style.borderColor =
+										'var(--border-light)';
+									this.style.color = 'var(--text-medium)';
+								"
+								title="Information">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round">
+									<circle cx="12" cy="12" r="10"></circle>
+									<line
+										x1="12"
+										y1="16"
+										x2="12"
+										y2="12"></line>
+									<line
+										x1="12"
+										y1="8"
+										x2="12.01"
+										y2="8"></line>
+								</svg>
+							</button>
+						</div>
+					</div>
+					<div class="settings-body">
+						<div class="settings-section">
+							<h3 class="settings-section-title">Profil</h3>
+							<div
+								class="form-group"
+								style="margin-bottom: 1.5rem">
+								<label for="settingsName">Nom complet</label>
+								<input type="text" id="settingsName" />
+							</div>
+							<div
+								class="form-group"
+								style="margin-bottom: 1.5rem">
+								<label for="settingsUsername"
+									>Nom d'utilisateur</label
+								>
+								<input type="text" id="settingsUsername" />
+							</div>
+							<div
+								class="form-group"
+								style="margin-bottom: 1.5rem">
+								<label for="settingsPassword"
+									>Nouveau mot de passe</label
+								>
+								<input
+									type="password"
+									id="settingsPassword"
+									placeholder="Laisser vide pour ne pas modifier" />
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer" style="padding: 1.5rem 2rem">
+						<button
+							class="btn-secondary"
+							onclick="closeSettingsModal()"
+							style="width: 100%">
+							Fermer
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- User Profile Modal -->
+			<div id="userProfileModal" class="user-profile-modal">
+				<div class="user-profile-content">
+					<div class="user-profile-header">
+						<div class="user-profile-avatar" id="profileAvatar">
+							F
+						</div>
+						<h2 class="user-profile-name" id="profileName">
+							Fabien Jaeger
+						</h2>
+						<p class="user-profile-role" id="profileRole">
+							Administrateur
+						</p>
+					</div>
+					<div class="user-profile-body">
+						<div class="profile-section">
+							<h3 class="profile-section-title">Statistiques</h3>
+							<div
+								style="
+									display: flex;
+									gap: 0.5rem;
+									margin-bottom: 1rem;
+								">
+								<button
+									class="btn-secondary"
+									id="profileMonthBtn"
+									style="flex: 1">
+									Ce mois
+								</button>
+								<button
+									class="btn-secondary"
+									id="profileYearBtn"
+									style="flex: 1">
+									Cette année
+								</button>
+							</div>
+							<div class="profile-stat-grid">
+								<div class="profile-stat-item">
+									<div
+										class="profile-stat-value"
+										id="profileSalesCount">
+										0
+									</div>
+									<div class="profile-stat-label">Ventes</div>
+								</div>
+								<div class="profile-stat-item">
+									<div
+										class="profile-stat-value"
+										id="profileRevenue">
+										0 €
+									</div>
+									<div class="profile-stat-label">
+										Revenus TTC
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="profile-section">
+							<h3 class="profile-section-title">Stock actuel</h3>
+							<div id="profileStock"></div>
+						</div>
+						<div class="profile-section">
+							<h3 class="profile-section-title">
+								Dernières ventes
+							</h3>
+							<ul
+								class="profile-recent-list"
+								id="profileRecentLogs"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Global Confirmation Modal -->
+			<div id="confirmModal" class="confirm-modal">
+				<div class="confirm-content">
+					<div class="confirm-header">
+						<div class="confirm-icon-wrap" id="confirmIcon">
+							<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+						</div>
+						<h3 class="confirm-title" id="confirmTitle">Confirmation</h3>
+					</div>
+					<p class="confirm-message" id="confirmMessage"></p>
+					<div class="confirm-actions">
+						<button class="btn-secondary" id="confirmCancel">Annuler</button>
+						<button class="btn-danger" id="confirmOk">Supprimer</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Activity Details Modal -->
+			<div id="activityDetailsModal" class="modal">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2 class="modal-title">Détails de ton activité</h2>
+						<button
+							class="modal-close"
+							onclick="closeActivityDetailsModal()">
+							&times;
+						</button>
+					</div>
+					<div class="modal-body" id="activityDetailsBody"></div>
+					<div class="modal-footer">
+						<button
+							class="btn-secondary"
+							onclick="closeActivityDetailsModal()">
+							Fermer
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Main Content -->
+			<main class="main-content">
+				<!-- Home Page -->
+				<div id="homePage" class="page-content active">
+					<div class="welcome-section">
+						<h1
+							class="welcome-title"
+							style="
+								display: flex;
+								align-items: center;
+								gap: 0.5rem;
+							">
+							<span
+								id="welcomeIcon"
+								style="
+									display: flex;
+									align-items: center;
+								"></span>
+							Bienvenue
+							<span id="welcomeUserName">Fabien</span>
+						</h1>
+						<p class="welcome-subtitle">
+							Tu te trouves sur le tableau de bord de Items
+							Project. Clique sur les cartes ci-dessous pour
+							accéder aux différentes sections de gestion.
+						</p>
+					</div>
+
+					<div
+						id="sessionRecap"
+						style="
+							margin-bottom: 2rem;
+							background: var(--bg-white);
+							padding: 1.5rem;
+							border-radius: var(--radius-md);
+							box-shadow: var(--shadow-sm);
+						">
+						<div
+							style="
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+								margin-bottom: 1rem;
+							">
+							<h3
+								style="
+									font-size: 1.1rem;
+									font-weight: 600;
+									color: var(--text-dark);
+									display: flex;
+									align-items: center;
+									gap: 0.5rem;
+								">
+								<span
+									id="productivityIcon"
+									style="
+										display: flex;
+										align-items: center;
+									"></span>
+								Ton activité aujourd'hui
+							</h3>
+							<button
+								class="btn-secondary"
+								onclick="showActivityDetails()"
+								style="
+									font-size: 0.85rem;
+									padding: 0.5rem 1rem;
+								">
+								En savoir plus...
+							</button>
+						</div>
+						<div
+							id="sessionRecapContent"
+							style="
+								color: var(--text-medium);
+								font-size: 0.9rem;
+							">
+							<p>Chargement...</p>
+						</div>
+					</div>
+
+					<div
+						style="
+							display: flex;
+							flex-direction: column;
+							gap: 1.5rem;
+						"
+						id="dashboardSections"></div>
+				</div>
+
+				<!-- Products Page -->
+				<div id="productsPage" class="page-content"></div>
+
+				<!-- Sales Page -->
+				<div id="salesPage" class="page-content"></div>
+
+				<!-- Accounting Page -->
+				<div id="accountingPage" class="page-content"></div>
+
+				<!-- Tasks Page -->
+				<div id="tasksPage" class="page-content"></div>
+
+				<!-- Clients Page -->
+				<div id="clientsPage" class="page-content"></div>
+
+				<!-- Users Page -->
+				<div id="usersPage" class="page-content"></div>
+
+				<!-- Logs Page -->
+				<div id="logsPage" class="page-content"></div>
+
+				<!-- Analytics Page -->
+				<div id="analyticsPage" class="page-content"></div>
+
+				<!-- Projects Page -->
+				<div id="projectsPage" class="page-content"></div>
+			</main>
+
+			<!-- Toast Notifications -->
+			<div id="toastContainer" class="toast-container"></div>
+		</div>
+
+		<script src="src/utils/helpers.js"></script>
+		<script src="src/utils/icons.js"></script>
+		<script src="src/core/dataManager.js"></script>
+		<script src="src/core/auth.js"></script>
+		<script src="src/core/datePicker.js"></script>
+		<script src="src/core/navigation.js"></script>
+		<script src="src/modules/dashboard.js"></script>
+		<script src="src/modules/products.js"></script>
+		<script src="src/modules/sales.js"></script>
+		<script src="src/modules/tasks.js"></script>
+		<script src="src/modules/users.js"></script>
+		<script src="src/modules/clients.js"></script>
+		<script src="src/modules/accounting.js"></script>
+		<script src="src/modules/analytics.js"></script>
+		<script src="src/modules/projects.js"></script>
+		<script src="src/modules/calendar.js"></script>
+		<script src="src/modules/logs.js"></script>
+		<script src="src/app.js"></script>
+	</body>
+</html>
