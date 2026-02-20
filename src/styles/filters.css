@@ -1,0 +1,75 @@
+
+.filter-tabs-container {
+	width: 100%;
+	overflow-x: auto;
+	margin: 2rem 0;
+}
+
+.filter-tabs {
+	position: relative;
+	display: inline-flex;
+	gap: 0.5rem;
+	background: var(--bg, #f3f4f6);
+	padding: 0.5rem;
+	border-radius: 12px;
+	min-width: 100%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.filter-tab {
+	position: relative;
+	padding: 0.75rem 1.5rem;
+	background: transparent;
+	border: none;
+	border-radius: 8px;
+	font-size: 0.9rem;
+	font-weight: 500;
+	color: var(--text-secondary, #6b7280);
+	cursor: pointer;
+	transition: color 0.3s ease;
+	white-space: nowrap;
+	z-index: 2;
+}
+
+.filter-tab:hover {
+	color: var(--text, #1f2937);
+}
+
+.filter-tab.active {
+	color: var(--primary, #4a90e2);
+	font-weight: 600;
+}
+
+.filter-indicator {
+	position: absolute;
+	bottom: 0.5rem;
+	left: 0;
+	height: calc(100% - 1rem);
+	background: var(--bg-white, #ffffff);
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	z-index: 1;
+}
+
+/* Dark mode support */
+body.theme-dark .filter-tabs {
+	background: var(--bg, #16181d);
+}
+
+body.theme-dark .filter-indicator {
+	background: var(--bg-light, #1f2329);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.theme-dark .filter-tab {
+	color: var(--text-secondary, #9ca3af);
+}
+
+body.theme-dark .filter-tab:hover {
+	color: var(--text, #e8eaed);
+}
+
+body.theme-dark .filter-tab.active {
+	color: var(--primary, #4a90e2);
+}
