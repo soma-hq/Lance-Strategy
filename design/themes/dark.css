@@ -1,0 +1,28 @@
+/* Dark theme variables */
+[data-theme="dark"] {
+	--primary-orange: #e67a35;
+	--primary-orange-hover: #d66b28;
+	--primary-orange-light: #3a2515;
+	--primary-blue: #5ba3f0;
+	--primary-blue-hover: #4a90e2;
+	--primary-blue-light: #1a2f4a;
+	--primary-red: #d64555;
+	--primary-red-hover: #c23848;
+	--primary-red-light: #3a2525;
+	--primary-green: #2ed573;
+	--primary-green-hover: #26d96f;
+	--primary-green-light: #1e3a2e;
+	--primary-purple: #8b5cf6;
+	--primary-purple-hover: #7c3aed;
+	--primary-purple-light: #2d1f4a;
+	--text-dark: #e9ecef;
+	--text-medium: #ced4da;
+	--text-light: #adb5bd;
+	--bg-white: #1e1e2e;
+	--bg-light: #252538;
+	--bg-gray: #2d2d44;
+	--border-light: #3a3a52;
+	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+	--shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+	--shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+}

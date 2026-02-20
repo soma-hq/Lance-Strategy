@@ -1,0 +1,32 @@
+/* Base variables (colors, radii, shadows, transitions) */
+:root {
+	--primary-orange: #ff8c42;
+	--primary-orange-hover: #ff7420;
+	--primary-orange-light: #fff4ed;
+	--primary-blue: #4a90e2;
+	--primary-blue-hover: #357abd;
+	--primary-blue-light: #e8f4fd;
+	--primary-red: #dc3545;
+	--primary-red-hover: #c82333;
+	--primary-red-light: #ffe5e5;
+	--primary-green: #28a745;
+	--primary-green-hover: #218838;
+	--primary-green-light: #d4edda;
+	--primary-purple: #6f42c1;
+	--primary-purple-hover: #5a34a3;
+	--primary-purple-light: #f3ebff;
+	--text-dark: #2c3e50;
+	--text-medium: #5a6c7d;
+	--text-light: #8899a6;
+	--bg-white: #ffffff;
+	--bg-light: #f8f9fa;
+	--bg-gray: #e9ecef;
+	--border-light: #dee2e6;
+	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+	--shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+	--shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+	--radius-sm: 6px;
+	--radius-md: 10px;
+	--radius-lg: 14px;
+	--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

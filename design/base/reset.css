@@ -1,0 +1,22 @@
+/* Reset and base typographic rules */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+	color: var(--text-dark);
+	background: var(--bg-light);
+	line-height: 1.6;
+	overflow-x: hidden;
+}
+
+/* Visible placeholders in dark mode */
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+[data-theme="dark"] select::placeholder {
+	color: #adb5bd;
+	opacity: 1;
+}
