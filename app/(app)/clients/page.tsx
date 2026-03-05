@@ -5,7 +5,7 @@ import api from "@/lib/api-client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/useToast";
 import { useConfirm } from "@/hooks/useConfirm";
-import { hasPermission } from "@/lib/rbac";
+import { canDo } from "@/lib/rbac";
 import type { Client, Sale } from "@/types";
 
 async function downloadInvoice(sale: Sale) {
@@ -300,7 +300,12 @@ export default function ClientsPage() {
 	const [invoiceDateFrom, setInvoiceDateFrom] = useState("");
 	const [invoiceDateTo, setInvoiceDateTo] = useState("");
 
-	const canManage = user ? hasPermission(user.role, "create") : false;
+	/** Whether the current user may create a new client record. */
+	const canCreate = canDo(user?.role ?? "", "createClient");
+	/** Whether the current user may edit an existing client record. */
+	const canEdit = canDo(user?.role ?? "", "editClient");
+	/** Whether the current user may delete a client record. */
+	const canDelete = canDo(user?.role ?? "", "deleteClient");
 
 	/* ── Data loading ──────────────────────────────────────────────────────── */
 
@@ -552,7 +557,7 @@ export default function ClientsPage() {
 							</button>
 						))}
 					</div>
-					{canManage && (
+					{canCreate && (
 						<button className="btn-primary btn-sm" onClick={openCreate}>
 							<IconPlus />
 							Nouveau client
@@ -715,29 +720,29 @@ export default function ClientsPage() {
 												</td>
 												<td>
 													<div style={{ display: "flex", gap: "0.4rem" }}>
-														{canManage && (
-															<>
-																<button
-																	className="btn-icon"
-																	onClick={(e) => {
-																		e.stopPropagation();
-																		openEdit(c);
-																	}}
-																	title="Modifier"
-																>
-																	<IconEdit />
-																</button>
-																<button
-																	className="btn-icon delete"
-																	onClick={(e) => {
-																		e.stopPropagation();
-																		handleDelete(c);
-																	}}
-																	title="Supprimer"
-																>
-																	<IconTrash />
-																</button>
-															</>
+														{canEdit && (
+															<button
+																className="btn-icon"
+																onClick={(e) => {
+																	e.stopPropagation();
+																	openEdit(c);
+																}}
+																title="Modifier"
+															>
+																<IconEdit />
+															</button>
+														)}
+														{canDelete && (
+															<button
+																className="btn-icon delete"
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleDelete(c);
+																}}
+																title="Supprimer"
+															>
+																<IconTrash />
+															</button>
 														)}
 													</div>
 												</td>
@@ -915,7 +920,7 @@ export default function ClientsPage() {
 								</div>
 							</div>
 							<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-								{canManage && (
+								{canDelete && (
 									<button
 										className="btn-danger btn-sm"
 										onClick={() => handleDelete(selected)}
@@ -1128,7 +1133,7 @@ export default function ClientsPage() {
 										</span>
 									</div>
 
-									{canManage && (
+									{canEdit && (
 										<button className="btn-primary btn-sm" onClick={startEditProfile}>
 											<IconEdit />
 											Modifier le profil
@@ -1553,6 +1558,7 @@ export default function ClientsPage() {
 										<textarea
 											value={notesValue}
 											onChange={(e) => setNotesValue(e.target.value)}
+											readOnly={!canEdit}
 											rows={12}
 											placeholder="Ajoutez des notes sur ce client : preferences, historique des echanges, informations importantes..."
 											style={{
@@ -1571,7 +1577,7 @@ export default function ClientsPage() {
 										/>
 									</div>
 									<div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-										{canManage ? (
+										{canEdit ? (
 											<button
 												className="btn-primary btn-sm"
 												onClick={handleSaveNotes}
