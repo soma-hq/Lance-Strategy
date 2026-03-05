@@ -6,6 +6,7 @@ import api from "@/lib/api-client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/useToast";
 import { useConfirm } from "@/hooks/useConfirm";
+import { canDo } from "@/lib/rbac";
 import type { User, UserRole, Sale, Client, Task, Project, Event, Log } from "@/types";
 
 /* ─── Constants ─────────────────────────────────────────────────────────── */
@@ -193,6 +194,7 @@ export default function UsersPage() {
 	const confirm = useConfirm();
 	const router = useRouter();
 
+
 	const [users, setUsers] = useState<User[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState("");
@@ -213,6 +215,13 @@ export default function UsersPage() {
 	const [profileLoading, setProfileLoading] = useState(false);
 
 	/* ─── RBAC ────────────────────────────────────────────────────────── */
+
+	/** Whether the current user may create a new user account. */
+	const canCreate = canDo(user?.role ?? "", "createUser");
+	/** Whether the current user may edit an existing user account. */
+	const canEdit = canDo(user?.role ?? "", "editUser");
+	/** Whether the current user may delete a user account. */
+	const canDelete = canDo(user?.role ?? "", "deleteUser");
 
 	useEffect(() => {
 		if (user && user.role !== "admin") router.push("/dashboard");
@@ -451,6 +460,7 @@ export default function UsersPage() {
 					</div>
 				</div>
 				<div className="page-header-box-actions">
+				{canCreate && (
 					<button className="btn-primary btn-sm" onClick={openCreate}>
 						<svg
 							width="14"
@@ -465,8 +475,9 @@ export default function UsersPage() {
 						</svg>
 						Nouvel utilisateur
 					</button>
-				</div>
+				)}
 			</div>
+		</div>
 
 			{/* Stats */}
 			<div
