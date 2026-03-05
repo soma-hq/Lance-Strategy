@@ -925,91 +925,146 @@ export default function SalesPage() {
 									/>
 								</div>
 							) : (
-								/* Creation / edit form with Global / Facture tabs */
-								<div>
-									{/* Pill tab switcher */}
-									<div style={{ display: "flex", gap: "0.4rem", marginBottom: "1.25rem" }}>
-										{(["global", "facture"] as const).map((tab) => (
-											<button key={tab} onClick={() => setFormTab(tab)}
-												style={{
-													padding: "0.4rem 1.1rem",
-													borderRadius: "999px",
-													border: "1.5px solid",
-													borderColor: formTab === tab ? "var(--accent)" : "var(--border-color)",
-													background: formTab === tab ? "var(--accent)" : "transparent",
-													color: formTab === tab ? "#fff" : "var(--text-muted)",
-													fontWeight: formTab === tab ? 700 : 400,
-													fontSize: "0.82rem",
-													cursor: "pointer",
-													fontFamily: "inherit",
-													transition: "all 0.15s",
+								/* Creation / edit form — properties left, tabs + content right */
+								<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", alignItems: "start" }}>
+
+									{/* LEFT column: seller, client, status, platform, date, notes */}
+									<div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+										<div style={{ marginBottom: "0.75rem", fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
+											Informations
+										</div>
+										<div className="form-group">
+											<label>Vendeur *</label>
+											<select value={form.sellerId} onChange={(e) => setForm({ ...form, sellerId: e.target.value })}>
+												<option value="">Sélectionner un vendeur</option>
+												{users.map((u) => <option key={u.id} value={String(u.id)}>{u.name}</option>)}
+											</select>
+										</div>
+										<div className="form-group">
+											<label>Client (optionnel)</label>
+											<select value={form.clientId}
+												onChange={(e) => {
+													// Auto-select "Direct" platform when a client is chosen and platform is blank
+													const newClientId = e.target.value;
+													const newPlatform = !form.platform && newClientId ? "Direct" : form.platform;
+													setForm({ ...form, clientId: newClientId, platform: newPlatform });
 												}}>
-												{tab === "global" ? "Global" : "Facture"}
-											</button>
-										))}
+												<option value="">Sans client</option>
+												{clients.map((c) => (
+													<option key={c.id} value={String(c.id)}>{c.name}{c.company ? ` — ${c.company}` : ""}</option>
+												))}
+											</select>
+										</div>
+										<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+											<div className="form-group">
+												<label>Statut</label>
+												<select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Sale["status"] })}>
+													<option value="completed">Complétée</option>
+													<option value="postponed">En attente</option>
+													<option value="cancelled">Annulée</option>
+												</select>
+											</div>
+											<div className="form-group">
+												<label>Date</label>
+												<input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+											</div>
+										</div>
+										<div className="form-group">
+											<label>Plateforme</label>
+											<select value={form.platform} onChange={(e) => setForm({ ...form, platform: e.target.value })}>
+												{PLATFORMS.map((p) => <option key={p} value={p}>{p || "Aucune"}</option>)}
+											</select>
+										</div>
+										<div className="form-group">
+											<label>Notes</label>
+											<textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}
+												rows={3} placeholder="Notes optionnelles…" style={{ resize: "vertical" }} />
+										</div>
 									</div>
 
-									{formTab === "global" ? (
-										/* Global tab — form fields */
-										<div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-											{/* Line items section header */}
-											<div style={{ marginBottom: "0.5rem", fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-												<span>Produits ({lines.length})</span>
-												<button onClick={addLine} style={{ background: "none", border: "none", color: "var(--accent)", cursor: "pointer", fontSize: "0.72rem", fontWeight: 700, fontFamily: "inherit", display: "flex", alignItems: "center", gap: "0.25rem" }}>
-													<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-													Ajouter un produit
-												</button>
-											</div>
-
-											{lines.map((line, idx) => {
-												// Stock check for this line
-												const available = line.productId ? getAvailableStock(line.productId) : Infinity;
-												const stockInsufficient = line.productId && line.quantity > available;
-
-												return (
-													<div key={line.id} style={{
-														display: "grid", gridTemplateColumns: "1fr 70px 100px 28px",
-														gap: "0.5rem", alignItems: "start", marginBottom: "0.5rem",
-														padding: "0.65rem", background: "var(--bg-alt)", borderRadius: "8px",
-														border: `1px solid ${stockInsufficient ? "var(--danger, #ef4444)" : "var(--border-color)"}`,
+									{/* RIGHT column: pill tabs at top, then tab content below */}
+									<div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+										{/* Tab switcher pills */}
+										<div style={{ display: "flex", gap: "0.4rem", marginBottom: "1rem" }}>
+											{(["global", "facture"] as const).map((tab) => (
+												<button key={tab} onClick={() => setFormTab(tab)}
+													style={{
+														padding: "0.4rem 1.1rem",
+														borderRadius: "999px",
+														border: "1.5px solid",
+														borderColor: formTab === tab ? "var(--accent)" : "var(--border-color)",
+														background: formTab === tab ? "var(--accent)" : "transparent",
+														color: formTab === tab ? "#fff" : "var(--text-muted)",
+														fontWeight: formTab === tab ? 700 : 400,
+														fontSize: "0.82rem",
+														cursor: "pointer",
+														fontFamily: "inherit",
+														transition: "all 0.15s",
 													}}>
-														<div className="form-group" style={{ marginBottom: 0 }}>
-															<label style={{ fontSize: "0.7rem" }}>{idx === 0 ? "Produit *" : `Produit ${idx + 1}`}</label>
-															<select value={line.productId} onChange={(e) => updateLine(line.id, "productId", e.target.value)}>
-																<option value="">Sélectionner…</option>
-																{products.map((p) => (
-																	<option key={p.id} value={String(p.id)}>{p.name} {p.sku ? `(${p.sku})` : ""}</option>
-																))}
-															</select>
-														</div>
-														<div className="form-group" style={{ marginBottom: 0 }}>
-															<label style={{ fontSize: "0.7rem" }}>Qté</label>
-															<input type="number" min={1} value={line.quantity}
-																onChange={(e) => updateLine(line.id, "quantity", Number(e.target.value))} />
-															{/* Stock warning displayed below quantity input */}
-															{stockInsufficient && (
-																<div style={{ fontSize: "0.68rem", color: "var(--danger, #ef4444)", marginTop: "0.2rem", lineHeight: 1.3 }}>
-																	Stock insuffisant ({available} disponible)
-																</div>
-															)}
-														</div>
-														<div className="form-group" style={{ marginBottom: 0 }}>
-															<label style={{ fontSize: "0.7rem" }}>Prix TTC</label>
-															<input type="number" min={0} step={0.01} value={line.unitPriceTTC}
-																onChange={(e) => updateLine(line.id, "unitPriceTTC", Number(e.target.value))} />
-														</div>
-														<button onClick={() => removeLine(line.id)} className="btn-icon delete"
-															style={{ marginTop: "20px", opacity: lines.length > 1 ? 1 : 0.3 }}
-															disabled={lines.length <= 1} title="Supprimer">
-															<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-														</button>
-													</div>
-												);
-											})}
+													{tab === "global" ? "Global" : "Facture"}
+												</button>
+											))}
+										</div>
 
-											{/* Totals summary aligned to the right below line items */}
-											<div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.25rem", marginBottom: "0.75rem" }}>
-												<div style={{ width: "240px", background: "var(--bg-alt)", borderRadius: "8px", padding: "0.75rem", display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+										{/* Tab content */}
+										{formTab === "global" ? (
+											/* Global tab — line items + totals */
+											<div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+												<div style={{ marginBottom: "0.5rem", fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+													<span>Produits ({lines.length})</span>
+													<button onClick={addLine} style={{ background: "none", border: "none", color: "var(--accent)", cursor: "pointer", fontSize: "0.72rem", fontWeight: 700, fontFamily: "inherit", display: "flex", alignItems: "center", gap: "0.25rem" }}>
+														<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+														Ajouter
+													</button>
+												</div>
+
+												{lines.map((line, idx) => {
+													// Stock check for this line
+													const available = line.productId ? getAvailableStock(line.productId) : Infinity;
+													const stockInsufficient = line.productId && line.quantity > available;
+
+													return (
+														<div key={line.id} style={{
+															display: "grid", gridTemplateColumns: "1fr 60px 90px 28px",
+															gap: "0.4rem", alignItems: "start", marginBottom: "0.5rem",
+															padding: "0.6rem", background: "var(--bg-alt)", borderRadius: "8px",
+															border: `1px solid ${stockInsufficient ? "var(--danger, #ef4444)" : "var(--border-color)"}`,
+														}}>
+															<div className="form-group" style={{ marginBottom: 0 }}>
+																<label style={{ fontSize: "0.68rem" }}>{idx === 0 ? "Produit *" : `N°${idx + 1}`}</label>
+																<select value={line.productId} onChange={(e) => updateLine(line.id, "productId", e.target.value)}>
+																	<option value="">Sélectionner…</option>
+																	{products.map((p) => (
+																		<option key={p.id} value={String(p.id)}>{p.name}{p.sku ? ` (${p.sku})` : ""}</option>
+																	))}
+																</select>
+															</div>
+															<div className="form-group" style={{ marginBottom: 0 }}>
+																<label style={{ fontSize: "0.68rem" }}>Qté</label>
+																<input type="number" min={1} value={line.quantity}
+																	onChange={(e) => updateLine(line.id, "quantity", Number(e.target.value))} />
+																{stockInsufficient && (
+																	<div style={{ fontSize: "0.65rem", color: "var(--danger, #ef4444)", marginTop: "0.2rem", lineHeight: 1.2 }}>
+																		Max {available}
+																	</div>
+																)}
+															</div>
+															<div className="form-group" style={{ marginBottom: 0 }}>
+																<label style={{ fontSize: "0.68rem" }}>Prix TTC</label>
+																<input type="number" min={0} step={0.01} value={line.unitPriceTTC}
+																	onChange={(e) => updateLine(line.id, "unitPriceTTC", Number(e.target.value))} />
+															</div>
+															<button onClick={() => removeLine(line.id)} className="btn-icon delete"
+																style={{ marginTop: "20px", opacity: lines.length > 1 ? 1 : 0.3 }}
+																disabled={lines.length <= 1} title="Supprimer">
+																<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+															</button>
+														</div>
+													);
+												})}
+
+												{/* Totals block below line items */}
+												<div style={{ background: "var(--bg-alt)", borderRadius: "8px", padding: "0.75rem", marginTop: "0.25rem", display: "flex", flexDirection: "column", gap: "0.3rem" }}>
 													<div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.82rem", color: "var(--text-muted)" }}>
 														<span>Sous-total HT</span><span style={{ fontWeight: 600 }}>{eur(linesTotalHT)}</span>
 													</div>
@@ -1022,74 +1077,22 @@ export default function SalesPage() {
 													</div>
 												</div>
 											</div>
-
-											{/* Seller and metadata fields */}
-											<div style={{ marginBottom: "0.5rem", fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
-												Informations
-											</div>
-											<div className="form-group">
-												<label>Vendeur *</label>
-												<select value={form.sellerId} onChange={(e) => setForm({ ...form, sellerId: e.target.value })}>
-													<option value="">Sélectionner un vendeur</option>
-													{users.map((u) => <option key={u.id} value={String(u.id)}>{u.name}</option>)}
-												</select>
-											</div>
-											<div className="form-group">
-												<label>Client (optionnel)</label>
-												<select value={form.clientId}
-													onChange={(e) => {
-														// Auto-select "Direct" platform when a client is chosen and platform is blank
-														const newClientId = e.target.value;
-														const newPlatform = !form.platform && newClientId ? "Direct" : form.platform;
-														setForm({ ...form, clientId: newClientId, platform: newPlatform });
-													}}>
-													<option value="">Sans client</option>
-													{clients.map((c) => (
-														<option key={c.id} value={String(c.id)}>{c.name}{c.company ? ` — ${c.company}` : ""}</option>
-													))}
-												</select>
-											</div>
-											<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem" }}>
-												<div className="form-group">
-													<label>Statut</label>
-													<select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Sale["status"] })}>
-														<option value="completed">Complétée</option>
-														<option value="postponed">En attente</option>
-														<option value="cancelled">Annulée</option>
-													</select>
+										) : (
+											/* Facture tab — live invoice preview */
+											<div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+												<div style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
+													Aperçu facture
 												</div>
-												<div className="form-group">
-													<label>Plateforme</label>
-													<select value={form.platform} onChange={(e) => setForm({ ...form, platform: e.target.value })}>
-														{PLATFORMS.map((p) => <option key={p} value={p}>{p || "Aucune"}</option>)}
-													</select>
-												</div>
-												<div className="form-group">
-													<label>Date</label>
-													<input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-												</div>
+												<InvoicePreview
+													form={form}
+													lines={lines}
+													products={products}
+													client={selectedClient}
+													seller={selectedSeller}
+												/>
 											</div>
-											<div className="form-group">
-												<label>Notes</label>
-												<textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}
-													rows={2} placeholder="Notes optionnelles…" style={{ resize: "vertical" }} />
-											</div>
-										</div>
-									) : (
-										/* Facture tab — invoice preview only */
-										<div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-											<div style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
-												Aperçu facture
-											</div>
-											<InvoicePreview
-												form={form}
-												lines={lines}
-												products={products}
-												client={selectedClient}
-												seller={selectedSeller}
-											/>
-										</div>
-									)}
+										)}
+									</div>
 								</div>
 							)}
 						</div>
