@@ -1,0 +1,7 @@
+{
+	"defaultPage": 1,
+	"defaultLimit": 20,
+	"maxLimit": 200,
+	"logsDefaultLimit": 50,
+	"stockHistoryTake": 50
+}

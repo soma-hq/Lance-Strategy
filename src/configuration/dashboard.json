@@ -1,0 +1,8 @@
+{
+	"recentSales": 10,
+	"overdueTasks": 5,
+	"topProducts": 5,
+	"upcomingEvents": 5,
+	"recentLogs": 10,
+	"chartLookbackDays": 7
+}

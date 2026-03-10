@@ -1,0 +1,7 @@
+{
+	"name": "Lance Strategy",
+	"description": "Application de gestion Lance Strategy",
+	"locale": "fr-FR",
+	"currency": "EUR",
+	"timezone": "Europe/Paris"
+}
